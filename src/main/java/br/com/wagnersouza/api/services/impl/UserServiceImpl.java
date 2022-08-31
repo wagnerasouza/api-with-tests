@@ -1,9 +1,11 @@
 package br.com.wagnersouza.api.services.impl;
 
 import br.com.wagnersouza.api.domain.User;
+import br.com.wagnersouza.api.domain.dto.UserDTO;
 import br.com.wagnersouza.api.repositories.UserRepository;
 import br.com.wagnersouza.api.services.UserService;
 import br.com.wagnersouza.api.services.exceptions.ObjectNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     @Autowired
+    private ModelMapper mapper;
+
+    @Autowired
     private UserRepository repository;
 
     @Override
@@ -22,7 +27,13 @@ public class UserServiceImpl implements UserService {
         return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
     }
 
+    @Override
     public List<User> findAll(){
         return repository.findAll();
+    }
+
+    @Override
+    public User create(UserDTO dto) {
+        return repository.save(mapper.map(dto, User.class));
     }
 }

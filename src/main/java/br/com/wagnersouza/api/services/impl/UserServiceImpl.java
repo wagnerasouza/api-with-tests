@@ -4,6 +4,7 @@ import br.com.wagnersouza.api.domain.User;
 import br.com.wagnersouza.api.domain.dto.UserDTO;
 import br.com.wagnersouza.api.repositories.UserRepository;
 import br.com.wagnersouza.api.services.UserService;
+import br.com.wagnersouza.api.services.exceptions.DataIntegrityViolationException;
 import br.com.wagnersouza.api.services.exceptions.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserDTO dto) {
+        findByEmail(dto);
         return repository.save(mapper.map(dto, User.class));
+    }
+
+    private void findByEmail(UserDTO dto){
+        Optional<User> user = repository.findByEmail(dto.getEmail());
+        if(user.isPresent()){
+            throw new DataIntegrityViolationException("E-mail já cadastrado no sistema");
+        }
     }
 }

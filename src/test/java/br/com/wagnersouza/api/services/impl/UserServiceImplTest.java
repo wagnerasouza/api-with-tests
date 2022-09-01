@@ -18,6 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -28,6 +29,8 @@ class UserServiceImplTest {
     public static final String EMAIL = "wagner@mail.com";
     public static final String PASSWORD = "123";
     public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
+    public static final int INDEX_ZERO = 0;
+
     @InjectMocks
     private UserServiceImpl service;
 
@@ -81,14 +84,25 @@ class UserServiceImplTest {
 
         assertNotNull(response);
         assertEquals(1, response.size());
-        assertEquals(User.class, response.get(0).getClass());
-        assertEquals(ID, response.get(0).getId());
-        assertEquals(NAME, response.get(0).getName());
-        assertEquals(EMAIL, response.get(0).getEmail());
+        assertEquals(User.class, response.get(INDEX_ZERO).getClass());
+        assertEquals(ID, response.get(INDEX_ZERO).getId());
+        assertEquals(NAME, response.get(INDEX_ZERO).getName());
+        assertEquals(EMAIL, response.get(INDEX_ZERO).getEmail());
+        assertEquals(PASSWORD, response.get(INDEX_ZERO).getPassword());
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnSucess() {
+        when(repository.save(any())).thenReturn(user);
+
+        User response = service.create(userDTO);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test

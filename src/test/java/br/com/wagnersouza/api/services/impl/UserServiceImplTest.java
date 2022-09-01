@@ -98,7 +98,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenCreateThenReturnSucess() {
+    void whenCreateThenReturnSuccess() {
         when(repository.save(any())).thenReturn(user);
 
         User response = service.create(userDTO);

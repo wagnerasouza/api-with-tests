@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -90,7 +91,16 @@ class UserResourceTest {
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnCreated() {
+        when(service.create(any())).thenReturn(user);
+
+        ResponseEntity<UserDTO> response = resource.create(userDTO);
+
+        assertNotNull(response);
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertNull(response.getBody());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getHeaders().get("Location"));
     }
 
     @Test
